@@ -26,7 +26,7 @@ public class ZiibdProjectApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        String sql = "SELECT * FROM employees";
+        String sql = "SELECT * FROM EMPLOYEES ";
         List<Employee> employees = jdbcTemplate.query(sql, new EmployeeRowMapper());
         
         employees.forEach(System.out::println);
@@ -35,24 +35,22 @@ public class ZiibdProjectApplication implements CommandLineRunner {
     static class Employee {
         private int id;
         private String name;
-        private String job;
 
-        public Employee(int id, String name, String job) {
+        public Employee(int id, String name) {
             this.id = id;
             this.name = name;
-            this.job = job;
         }
 
         @Override
         public String toString() {
-            return "Employee{id=" + id + ", name='" + name + "', job='" + job + "'}";
+            return "Employee{id=" + id + ", name='" + name + "'}";
         }
     }
 
     static class EmployeeRowMapper implements RowMapper<Employee> {
         @Override
         public Employee mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Employee(rs.getInt("id"), rs.getString("name"), rs.getString("job"));
+            return new Employee(rs.getInt("id"), rs.getString("name"));
         }
     }
 }

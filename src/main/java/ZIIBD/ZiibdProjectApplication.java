@@ -4,8 +4,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -26,31 +24,31 @@ public class ZiibdProjectApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        String sql = "SELECT * FROM EMPLOYEES ";
-        List<Employee> employees = jdbcTemplate.query(sql, new EmployeeRowMapper());
+        String sql = "SELECT Movie_ID,title FROM movies ";
+        List<Movie> Movies = jdbcTemplate.query(sql, new MovieRowMapper());
         
-        employees.forEach(System.out::println);
+        Movies.forEach(System.out::println);
     }
 
-    static class Employee {
+    static class Movie {
         private int id;
         private String name;
 
-        public Employee(int id, String name) {
+        public Movie(int id, String name) {
             this.id = id;
             this.name = name;
         }
 
         @Override
         public String toString() {
-            return "Employee{id=" + id + ", name='" + name + "'}";
+            return "Movie{id=" + id + ", title='" + name + "'}";
         }
     }
 
-    static class EmployeeRowMapper implements RowMapper<Employee> {
+    static class MovieRowMapper implements RowMapper<Movie> {
         @Override
-        public Employee mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new Employee(rs.getInt("id"), rs.getString("name"));
+        public Movie mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Movie(rs.getInt("MOVIE_ID"), rs.getString("TITLE"));
         }
     }
 }

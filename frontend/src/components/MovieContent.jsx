@@ -1,5 +1,5 @@
 import React, { useState, useEffect,} from "react";
-import { Card, Container, Row, Col, Button } from 'react-bootstrap';
+import { Card, Container, Row, Col, InputGroup, Form, Button } from 'react-bootstrap';
 import { data, Link } from "react-router-dom";
 
 export const MovieContent = () => {
@@ -28,6 +28,12 @@ export const MovieContent = () => {
         <Container className="py-4 bs-body-bg bg-black">
             <h1 className="text-3xl font-bold text-light mb-4">Szczegółowe informacje</h1>
             <p className="mb-4 text-light"> </p>
+
+            <InputGroup>
+                <InputGroup.Text className="bg-dark text-light">Podziel się swoją opinią!</InputGroup.Text>
+                <Form.Control as="textarea" aria-label="With textarea" className="bg-dark text-light" />
+                <Button variant="success" id="button-addon2">Wyślij</Button>
+            </InputGroup>
 
             <Row xs={1} md={2} lg={3} className="g-4">
                 

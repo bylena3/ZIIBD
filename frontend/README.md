@@ -12,4 +12,9 @@ Do zrobienia:
 
 -dodac react router do podstron
 
-![navbar](https://github.com/user-attachments/assets/ef1aa5ea-2b4a-4b31-8cbb-b602158975a6)
+Dynamicznie tworzone podstrony dla każdego filmu/serialu -> movies/{id_filmu}
+
+Przechowywanie obrazów -> link do zdjęcia? XD
+
+
+

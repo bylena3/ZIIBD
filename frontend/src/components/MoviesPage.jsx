@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, Container, Row, Col, Button } from 'react-bootstrap';
 import { data, Link } from "react-router-dom";
 
-export const MoviesPage = () => {
+const MoviesPage = () => {
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {

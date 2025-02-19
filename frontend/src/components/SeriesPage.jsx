@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Card, Container, Row, Col, Button } from 'react-bootstrap';
+import { data, Link } from "react-router-dom";
 
 const SeriesPage = () => {
     const [series, setSeries] = useState([]);
@@ -13,8 +14,8 @@ const SeriesPage = () => {
 
     return (
         <Container className="py-4">
-            <h1 className="text-3xl font-bold mb-4">Lista Seriali</h1>
-            <p className="mb-4">Witaj na stronie z serialami!</p>
+            <h1 className="text-3xl font-bold text-light mb-4">Lista Seriali</h1>
+            <p className="mb-4 text-light">Witaj na stronie z serialami!</p>
 
             <Row xs={1} md={2} lg={3} className="g-4">
                 {series.map((show) => (
@@ -29,7 +30,7 @@ const SeriesPage = () => {
                                 </Card.Text>
                             </Card.Body>
                             <Card.Body>
-                                <Card.Link href="#"> <Button variant="warning">Szczegółowe informacje</Button> </Card.Link>
+                                <Card.Link as={Link} to={'' + show.SERIES_ID} > <Button variant="success" className="fw-bold text-light">Szczegółowe informacje</Button> </Card.Link>
                             </Card.Body>
                         </Card>
                     </Col>

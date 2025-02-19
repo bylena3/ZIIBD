@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Card, Container, Row, Col, Button } from 'react-bootstrap';
-import { data } from "react-router-dom";
+import { data, Link } from "react-router-dom";
 
-const MoviesPage = () => {
+export const MoviesPage = () => {
     const [movies, setMovies] = useState([]);
 
     useEffect(() => {
@@ -24,9 +24,9 @@ const MoviesPage = () => {
 
 
     return (
-        <Container className="py-4">
-            <h1 className="text-3xl font-bold mb-4">Lista Filmów</h1>
-            <p className="mb-4">Witaj na stronie z filmami! </p>
+        <Container className="py-4 bs-body-bg bg-black">
+            <h1 className="text-3xl font-bold text-light mb-4">Lista Filmów</h1>
+            <p className="mb-4 text-light">Witaj na stronie z filmami! </p>
 
             <Row xs={1} md={2} lg={3} className="g-4">
                 {movies.map((movie) => (
@@ -41,7 +41,7 @@ const MoviesPage = () => {
                                 </Card.Text>
                             </Card.Body>
                             <Card.Body>
-                                <Card.Link href= {'movies/' + movie.MOVIE_ID}> <Button variant="warning">Szczegółowe informacje</Button> </Card.Link>
+                                <Card.Link as={Link} to={''+ movie.MOVIE_ID}> <Button variant="success" className="fw-bold text-light">Szczegółowe informacje</Button> </Card.Link>
                             </Card.Body>
                         </Card>
                     </Col>

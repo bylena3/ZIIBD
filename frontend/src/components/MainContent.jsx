@@ -56,7 +56,7 @@ export const MainContent = () => {
                                     <Card className="h-100 shadow-sm" bg="dark" text="light">
                                         <Card.Body>
                                             <Card.Title className="text-xl font-bold mb-2">{topmovie.TITLE}</Card.Title>
-                                            <Card.Img variant="top" src="https://www.svgrepo.com/show/508699/landscape-placeholder.svg"/>
+                                            <Card.Img variant="top" src={topmovie.URL}  style={{ width: '200px', height: '300px', objectFit: 'cover' }}/>
                                         </Card.Body>
                                         <Card.Body>
                                             <Card.Link as={Link} to={''+ topmovie.MOVIE_ID}> <Button variant="success" className="fw-bold text-light">Szczegółowe informacje</Button> </Card.Link>

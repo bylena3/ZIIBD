@@ -25,7 +25,18 @@ export const MovieContent = () => {
         <Container className="py-4 bs-body-bg bg-black">
             <h1 className="text-3xl font-bold text-light mb-4">Szczegółowe informacje</h1>
             <p className="mb-4 text-light"> </p>
-
+            <Card className="h-100 shadow-sm" bg="dark" text="light">
+                <Card.Body>
+                    <Card.Title className="text-xl font-bold mb-2">XXX</Card.Title>
+                    <Card.Img variant="top" src={URL}  style={{ width: '200px', height: '300px', objectFit: 'cover' }}/>
+                    <Card.Text>
+                        <p><strong>Reżyser:</strong> XXX</p>
+                        <p><strong>Długość:</strong> X min</p>
+                        <p><strong>Głowni Aktorzy:</strong> X </p>
+                        <p><strong>gatunek:</strong> Xxxx</p>
+                    </Card.Text>
+                </Card.Body>
+            </Card>
             <InputGroup>
                 <InputGroup.Text className="bg-dark text-light">Podziel się swoją opinią!</InputGroup.Text>
                 <Form.Control as="textarea" aria-label="With textarea" className="bg-dark text-light" />

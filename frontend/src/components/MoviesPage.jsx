@@ -36,7 +36,7 @@ const MoviesPage = () => {
                                 <Card.Title className="text-xl font-bold mb-2">{movie.TITLE}</Card.Title>
                                 <Card.Img variant="top" src="https://www.svgrepo.com/show/508699/landscape-placeholder.svg"/>
                                 <Card.Text>
-                                    <p><strong>Reżyser:</strong> {movie.DIRECTOR_SURNAME}</p>
+                                    <p><strong>Reżyser:</strong> <a href={"https://pl.wikipedia.org/wiki/" + movie.DIRECTOR_NAME + "_" + movie.DIRECTOR_SURNAME}>{movie.DIRECTOR_NAME} {movie.DIRECTOR_SURNAME}</a></p>
                                     <p><strong>Długość:</strong> {movie.DURATION} min</p>
                                 </Card.Text>
                             </Card.Body>

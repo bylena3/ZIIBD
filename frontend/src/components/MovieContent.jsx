@@ -1,26 +1,23 @@
-import React, { useState, useEffect,} from "react";
+import React, { useState, useEffect} from "react";
 import { Card, Container, Row, Col, InputGroup, Form, Button } from 'react-bootstrap';
 import { data, Link } from "react-router-dom";
+import { useParams } from "react-router"
+
 
 export const MovieContent = () => {
-    const [movies, setMovies] = useState([]);
+    const [reviews, setReviews] = useState([]);
 
-    useEffect(() => {
-        const fetchmovies = async () => {
-        fetch('http://localhost:8080/api/movies/', {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(response => response.json())
-            .then(data => setMovies(data))
-            .catch(error => console.error('Error fetching movies:', error));
-        }
-        fetchmovies();
-    }, []);
+    // let params = useParams();
+    
+
+    // useEffect(() => {
+    //     fetch(`/api/reviews/${params.id}`)
+    //         .then(response => response.json())
+    //         .then(data => setReviews(data))
+    //         .catch(error => console.error("Error fetching reviews:", error));
+    // }, []);
+
+    // const thisReviews = reviews.filter((rev) => rev.review_id == params.id);
 
 
     return (
@@ -35,12 +32,21 @@ export const MovieContent = () => {
                 <Button variant="success" id="button-addon2">Wyślij</Button>
             </InputGroup>
 
-            <Row xs={1} md={2} lg={3} className="g-4">
-                
-                    <Col>
-                        
-                    </Col>
-            </Row>
+            {/* <Row className="g-4">
+            <div>
+            <h3 className="text-light">Recenzje</h3>
+                {reviews.length > 0 ? (
+                    reviews.map(thisReviews => (
+                        <div key={thisReviews.review_id} className="review">
+                            <p><strong>{thisReviews.author}</strong> – {thisReviews.score}/10</p>
+                            <p>{thisReviews.content}</p>
+                        </div>
+                    ))
+                ) : (
+                    <p className="text-light">Brak recenzji dla tego filmu.</p>
+                )}
+            </div>
+            </Row> */}
         </Container>
     );
 };

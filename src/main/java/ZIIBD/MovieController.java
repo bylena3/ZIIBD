@@ -30,4 +30,10 @@ public class MovieController {
         String sql = "SELECT series_ID, title FROM series WHERE ROWNUM <=3 UNION ALL SELECT movie_id, title FROM movies WHERE ROWNUM <=3";
         return jdbcTemplate.queryForList(sql);
     }
+
+    @GetMapping("/api/reviews")
+    public List<Map<String, Object>> getReviews() {
+        String sql = "SELECT review_id, author, score, content FROM reviews";
+        return jdbcTemplate.queryForList(sql);
+    }
 }

@@ -24,4 +24,10 @@ public class MovieController {
         String sql = "SELECT s.SERIES_ID, s.TITLE, d.NAME AS DIRECTOR_NAME , d.SURNAME AS DIRECTOR_SURNAME, s.SEASONS FROM series s JOIN directors d ON s.DIRECTOR_ID = d.DIRECTOR_ID";
         return jdbcTemplate.queryForList(sql);
     }
+
+    @GetMapping("/api/top_media")
+    public List<Map<String, Object>> getTopSeries() {
+        String sql = "SELECT series_ID, title FROM series WHERE ROWNUM <=3 UNION ALL SELECT movie_id, title FROM movies WHERE ROWNUM <=3";
+        return jdbcTemplate.queryForList(sql);
+    }
 }

@@ -2,42 +2,28 @@ import React, { useState, useEffect} from "react";
 import { Card, Container, Row, Col, InputGroup, Form, Button } from 'react-bootstrap';
 import { data, Link } from "react-router-dom";
 import { useParams } from "react-router"
-
-export const renderStars = (score) => {
-    const totalStars = 10; // Zakładając, że maksymalna ocena to 5 gwiazdek
-    let stars = [];
-
-    for (let i = 0; i < totalStars; i++) {
-        if (i < score) {
-            stars.push("★"); // Pełna gwiazdka
-        } else {
-            stars.push("☆"); // Pusta gwiazdka
-        }
-    }
-
-    return stars.join(" "); // Łączy wszystkie gwiazdki w jeden ciąg
-};
+import { renderStars } from "./MovieContent";
 
 
 
-export const MovieContent = () => {
+
+export const SeriesContent = () => {
     const [reviews, setReviews] = useState([]);
 
     let params = useParams();
     
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/movie_reviews`)
+        fetch(`http://localhost:8080/api/series_reviews`)
             .then(response => response.json())
             .then(data => setReviews(data))
             .catch(error => console.error("Error fetching reviews:", error));
     }, []);
     
-    const greviews = Array.isArray(reviews) 
+    const series_reviews = Array.isArray(reviews) 
     ? reviews.filter(rev => rev.TITLE.trim().toLowerCase() === params.id.trim().toLowerCase()) 
     : [];
 
-    console.log(greviews)
     return (
     
         <Container className="py-4 bs-body-bg bg-black">
@@ -64,8 +50,8 @@ export const MovieContent = () => {
             <Row className="g-4">
             <div>
             <h3 className="text-light">Recenzje</h3>
-                {greviews.length > 0 ? (
-                    greviews.map(thisReviews => (
+                {series_reviews.length > 0 ? (
+                    series_reviews.map(thisReviews => (
                         <Card className="h-100 shadow-sm" bg="dark" text="light">
                             <Card.Body>
                                 <Card.Title className="text-xl font-bold mb-2 text-light"><strong>{thisReviews.AUTHOR}</strong></Card.Title>
@@ -85,4 +71,4 @@ export const MovieContent = () => {
     );
 };
 
-export default MovieContent;
+export default SeriesContent;

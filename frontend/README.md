@@ -16,5 +16,7 @@ Dynamicznie tworzone podstrony dla każdego filmu/serialu -> movies/{id_filmu}
 
 Przechowywanie obrazów -> link do zdjęcia? XD
 
+Należy zmienić pobieranie danych tj. zrobić raz publiczne? 
+
 
 

@@ -5,6 +5,7 @@ import MoviesPage from './components/MoviesPage';
 import SeriesPage from './components/SeriesPage';
 import MovieContent from './components/MovieContent';
 import MainContent from './components/MainContent';
+import SeriesContent from './components/SeriesContent';
 
 function App() {
     return (
@@ -17,7 +18,7 @@ function App() {
                     <Route path="/movies" element={<MoviesPage />} />
                     <Route path="/series" element={<SeriesPage />} />
                     <Route path="/movies/:id" element={<MovieContent />} /> 
-                    <Route path="/series/:id" element={<MovieContent />} />  
+                    <Route path="/series/:id" element={<SeriesContent />} />  
                 </Routes>
             </div>
         </BrowserRouter>

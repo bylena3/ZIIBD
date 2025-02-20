@@ -38,6 +38,7 @@ const MoviesPage = () => {
                                 <Card.Text>
                                     <p><strong>Reżyser:</strong> <a href={"https://pl.wikipedia.org/wiki/" + movie.DIRECTOR_NAME + "_" + movie.DIRECTOR_SURNAME}>{movie.DIRECTOR_NAME} {movie.DIRECTOR_SURNAME}</a></p>
                                     <p><strong>Długość:</strong> {movie.DURATION} min</p>
+                                    <p><strong>Gatunek:</strong> {movie.GENRE_NAME}</p>
                                 </Card.Text>
                             </Card.Body>
                             <Card.Body>

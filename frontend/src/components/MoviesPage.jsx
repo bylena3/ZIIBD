@@ -42,7 +42,7 @@ const MoviesPage = () => {
                                 </Card.Text>
                             </Card.Body>
                             <Card.Body>
-                                <Card.Link as={Link} to={''+ movie.TITLE}> <Button variant="success" className="fw-bold text-light">Szczegółowe informacje</Button> </Card.Link>
+                                <Card.Link as={Link} to={'' + movie.MOVIE_ID + '/' + movie.TITLE}> <Button variant="success" className="fw-bold text-light">Szczegółowe informacje</Button> </Card.Link>
                             </Card.Body>
                         </Card>
                     </Col>

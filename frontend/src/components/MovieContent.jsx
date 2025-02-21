@@ -35,14 +35,14 @@ export const MovieContent = () => {
             .then(response => response.json())
             .then(data => {
                 // Find the movie that matches the current title parameter
-                const movie = data.find(m => m.TITLE.trim().toLowerCase() === params.id.trim().toLowerCase());
+                const movie = data.find(m => m.MOVIE_ID == params.id);
                 setMovieInfo(movie);
             })
             .catch(error => console.error("Error fetching movie info:", error));
     }, [params.id]);
 
     const greviews = Array.isArray(reviews)
-        ? reviews.filter(rev => rev.TITLE.trim().toLowerCase() === params.id.trim().toLowerCase())
+        ? reviews.filter(rev => rev.MOVIE_ID == params.id)
         : [];
 
     return (

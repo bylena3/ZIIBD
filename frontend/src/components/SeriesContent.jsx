@@ -1,14 +1,42 @@
 import React, { useState, useEffect} from "react";
 import { Card, Container, Row, Col, InputGroup, Form, Button } from 'react-bootstrap';
 import { Link } from "react-router-dom";
-import { useParams } from "react-router";
+import { useParams, useLocation } from "react-router";
 import { renderStars } from "./MovieContent";
+import { onSubmit } from "../service/onSubmit";
 
 export const SeriesContent = () => {
     const [reviews, setReviews] = useState([]);
     const [seriesInfo, setSeriesInfo] = useState(null);
-
+    const [reviewContent, setReviewContent] = useState("");
+    const [rating, setRating] = useState(6);
+    
     let params = useParams();
+
+    console.log(params.id)
+ 
+
+ 
+
+    const handleSubmit = () => {
+        let reviewData = {
+            score: 5,  
+            author: "Anonim", 
+            movie_ID: null, 
+            series_ID: params.id,  
+            content: reviewContent
+        };
+
+        if (!reviewContent.trim()) {
+            alert("Wpisz treść recenzji!");
+            return;
+        }
+
+        onSubmit({ content: reviewContent, score: rating }); // Przekazujemy dane do funkcji onSubmit
+        setReviewContent(""); // Czyścimy pole tekstowe
+        setRating(5); // Resetujemy ocenę
+    };
+    
 
     useEffect(() => {
         // Fetch reviews
@@ -22,14 +50,14 @@ export const SeriesContent = () => {
             .then(response => response.json())
             .then(data => {
                 // Find the series that matches the current title parameter
-                const series = data.find(s => s.TITLE.trim().toLowerCase() === params.id.trim().toLowerCase());
+                const series = data.find(s => s.SERIES_ID == params.id);
                 setSeriesInfo(series);
             })
             .catch(error => console.error("Error fetching series info:", error));
-    }, [params.id]);
+    }, [params.title]);
 
     const series_reviews = Array.isArray(reviews)
-        ? reviews.filter(rev => rev.TITLE.trim().toLowerCase() === params.id.trim().toLowerCase())
+        ? reviews.filter(rev => rev.SERIES_ID == params.id)
         : [];
 
     return (
@@ -59,10 +87,21 @@ export const SeriesContent = () => {
                 </Card>
             )}
 
+            
             <InputGroup className="mt-4">
-                <InputGroup.Text className="bg-dark text-light">Podziel się swoją opinią!</InputGroup.Text>
-                <Form.Control as="textarea" aria-label="With textarea" className="bg-dark text-light" />
-                <Button variant="success" id="button-addon2">Wyślij</Button>
+            <Form.Group className="d-flex align-items-center">
+            <Form.Select 
+                className="bg-dark text-light w-auto h-100" 
+                value={rating} 
+                onChange={(e) => setRating(Number(e.target.value))}
+            >
+                {[...Array(10)].map((_, i) => (
+                <option key={i + 1} value={i + 1}>{i + 1}</option>
+                ))}
+            </Form.Select>
+            </Form.Group>
+                <Form.Control as="textarea" aria-label="With textarea" className="bg-dark text-light" onChange={(e) => setReviewContent(e.target.value)} />
+                <Button variant="success" id="button-addon2" onClick={handleSubmit}>Wyślij</Button>
             </InputGroup>
 
             <Row className="g-4 mt-2">
@@ -70,7 +109,7 @@ export const SeriesContent = () => {
                     <h3 className="text-light">Recenzje</h3>
                     {series_reviews.length > 0 ? (
                         series_reviews.map(thisReviews => (
-                            <Card key={thisReviews.REVIEW_ID} className="h-100 shadow-sm mb-3" bg="dark" text="light">
+                            <Card key={thisReviews.REVIEW_ID} className="h-50 shadow-sm mb-3" bg="dark" text="light">
                                 <Card.Body>
                                     <Card.Title className="text-xl font-bold mb-2 text-light"><strong>{thisReviews.AUTHOR}</strong></Card.Title>
                                     <Card.Header>{renderStars(thisReviews.SCORE)}</Card.Header>

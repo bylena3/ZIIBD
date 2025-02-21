@@ -49,5 +49,13 @@ public class MovieController {
         return jdbcTemplate.queryForList(sql);
     }
 
+    @GetMapping("/api/series_info")
+    public List<Map<String, Object>> getSeriesInfo() {
+        String sql = "SELECT s.Title, s.URL, s.Seasons, s.AvgDuration, d.Name || ' ' || d.Surname AS Director, g.Name AS Genre, LISTAGG(a.Name || ' ' || a.Surname, ', ') WITHIN GROUP (ORDER BY a.Surname, a.Name) AS Actors FROM Series s JOIN Directors d ON s.Director_ID = d.Director_ID JOIN Genres g ON s.Genre_ID = g.Genre_ID JOIN SeriesCast sc ON s.Series_ID = sc.Series_ID JOIN Actors a ON sc.Actor_ID = a.Actor_ID GROUP BY s.Series_ID, s.Title, s.URL, s.Seasons, s.AvgDuration, d.Name, d.Surname, g.Name ORDER BY s.Title";
+        return jdbcTemplate.queryForList(sql);
+    }
 
 }
+
+
+

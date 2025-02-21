@@ -1,69 +1,112 @@
-import React, { useState, useEffect} from "react";
-import { Card, Container, Row, Col, InputGroup, Form, Button } from 'react-bootstrap';
-import { Link } from "react-router-dom";
-import { useParams, useLocation } from "react-router";
+import React, { useState, useEffect } from "react";
+import { Card, Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { useParams } from "react-router-dom";
 import { renderStars } from "./MovieContent";
-import { onSubmit } from "../service/onSubmit";
 
 export const SeriesContent = () => {
     const [reviews, setReviews] = useState([]);
     const [seriesInfo, setSeriesInfo] = useState(null);
     const [reviewContent, setReviewContent] = useState("");
     const [rating, setRating] = useState(6);
-    
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState("");
+    const [submitSuccess, setSubmitSuccess] = useState(false);
+
     let params = useParams();
+    const seriesId = parseInt(params.id);
 
-    console.log(params.id)
- 
+    const fetchSeriesInfo = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/series_info`);
+            if (!response.ok) throw new Error("Network response failed");
 
- 
+            const data = await response.json();
+            const series = data.find(s => s.SERIES_ID == seriesId);
+            setSeriesInfo(series);
+        } catch (error) {
+            console.error("Error fetching series info:", error);
+        }
+    };
 
-    const handleSubmit = () => {
-        let reviewData = {
-            score: 5,  
-            author: "Anonim", 
-            movie_ID: null, 
-            series_ID: params.id,  
-            content: reviewContent
-        };
+    const fetchReviews = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/series_reviews`);
+            if (!response.ok) throw new Error("Network response failed");
+
+            const data = await response.json();
+            setReviews(data);
+        } catch (error) {
+            console.error("Error fetching reviews:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchSeriesInfo();
+        fetchReviews();
+    }, [seriesId]);
+
+    const seriesReviews = Array.isArray(reviews)
+        ? reviews.filter(rev => rev.SERIES_ID == seriesId)
+        : [];
+
+
+    const handleFormSubmit = async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
 
         if (!reviewContent.trim()) {
-            alert("Wpisz treść recenzji!");
+            setSubmitError("Wpisz treść recenzji!");
             return;
         }
 
-        onSubmit({ content: reviewContent, score: rating }); // Przekazujemy dane do funkcji onSubmit
-        setReviewContent(""); // Czyścimy pole tekstowe
-        setRating(5); // Resetujemy ocenę
+        setIsSubmitting(true);
+        setSubmitError("");
+        setSubmitSuccess(false);
+
+        const reviewData = {
+            score: rating,
+            author: "anonymus",
+            series_id: seriesId,
+            content: reviewContent
+        };
+
+        try {
+            console.log("Sending review data:", reviewData);
+            console.log("Request URL: http://localhost:8080/api/reviews/add");
+            console.log("JSON payload:", JSON.stringify(reviewData));
+
+            const response = await fetch('http://localhost:8080/api/reviews/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(reviewData)
+            });
+
+
+            console.log("Response status:", response.status);
+            const responseText = await response.text();
+            console.log("Response body:", responseText);
+
+            if (response.ok) {
+                setSubmitSuccess(true);
+                setReviewContent("");
+                setRating(6);
+                fetchReviews(); // Odświeżamy listę recenzji
+            } else {
+                setSubmitError(`Błąd: ${responseText}`);
+            }
+        } catch (error) {
+            console.error("Request error:", error);
+            setSubmitError(`Błąd połączenia: ${error.message}`);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
-    
-
-    useEffect(() => {
-        // Fetch reviews
-        fetch(`http://localhost:8080/api/series_reviews`)
-            .then(response => response.json())
-            .then(data => setReviews(data))
-            .catch(error => console.error("Error fetching reviews:", error));
-
-        // Fetch series information
-        fetch(`http://localhost:8080/api/series_info`)
-            .then(response => response.json())
-            .then(data => {
-                // Find the series that matches the current title parameter
-                const series = data.find(s => s.SERIES_ID == params.id);
-                setSeriesInfo(series);
-            })
-            .catch(error => console.error("Error fetching series info:", error));
-    }, [params.title]);
-
-    const series_reviews = Array.isArray(reviews)
-        ? reviews.filter(rev => rev.SERIES_ID == params.id)
-        : [];
 
     return (
         <Container className="py-4 bs-body-bg bg-black">
             <h1 className="text-3xl font-bold text-light mb-4">Szczegółowe informacje</h1>
-            <p className="mb-4 text-light"> </p>
 
             {seriesInfo ? (
                 <Card className="h-100 shadow-sm" bg="dark" text="light">
@@ -87,43 +130,76 @@ export const SeriesContent = () => {
                 </Card>
             )}
 
-            
-            <InputGroup className="mt-4">
-            <Form.Group className="d-flex align-items-center">
-            <Form.Select 
-                className="bg-dark text-light w-auto h-100" 
-                value={rating} 
-                onChange={(e) => setRating(Number(e.target.value))}
-            >
-                {[...Array(10)].map((_, i) => (
-                <option key={i + 1} value={i + 1}>{i + 1}</option>
-                ))}
-            </Form.Select>
-            </Form.Group>
-                <Form.Control as="textarea" aria-label="With textarea" className="bg-dark text-light" onChange={(e) => setReviewContent(e.target.value)} />
-                <Button variant="success" id="button-addon2" onClick={handleSubmit}>Wyślij</Button>
-            </InputGroup>
 
-            <Row className="g-4 mt-2">
-                <div>
-                    <h3 className="text-light">Recenzje</h3>
-                    {series_reviews.length > 0 ? (
-                        series_reviews.map(thisReviews => (
-                            <Card key={thisReviews.REVIEW_ID} className="h-50 shadow-sm mb-3" bg="dark" text="light">
+            <Card className="mt-4" bg="dark" text="light">
+                <Card.Body>
+                    <Card.Title>Dodaj swoją recenzję</Card.Title>
+
+                    {submitSuccess && (
+                        <div className="alert alert-success">
+                            Recenzja została dodana pomyślnie!
+                        </div>
+                    )}
+
+                    {submitError && (
+                        <div className="alert alert-danger">
+                            {submitError}
+                        </div>
+                    )}
+
+                    <Form onSubmit={handleFormSubmit}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Twoja ocena:</Form.Label>
+                            <Form.Select
+                                className="bg-dark text-light"
+                                value={rating}
+                                onChange={(e) => setRating(Number(e.target.value))}
+                            >
+                                {[...Array(10)].map((_, i) => (
+                                    <option key={i + 1} value={i + 1}>{i + 1}</option>
+                                ))}
+                            </Form.Select>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                            <Form.Label>Twoja recenzja:</Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                rows={3}
+                                className="bg-dark text-light"
+                                value={reviewContent}
+                                onChange={(e) => setReviewContent(e.target.value)}
+                                placeholder="Wpisz swoją recenzję..."
+                            />
+                        </Form.Group>
+
+                        <Button type="submit">Wyślij recenzję</Button>
+
+                    </Form>
+                </Card.Body>
+            </Card>
+
+            {/* Lista recenzji */}
+            <Card className="mt-4" bg="dark" text="light">
+                <Card.Body>
+                    <Card.Title>Recenzje</Card.Title>
+
+                    {seriesReviews.length > 0 ? (
+                        seriesReviews.map(review => (
+                            <Card key={review.REVIEW_ID} className="mb-3" bg="secondary" text="light">
+                                <Card.Header>
+                                    <strong>{review.AUTHOR}</strong> - {renderStars(review.SCORE)}
+                                </Card.Header>
                                 <Card.Body>
-                                    <Card.Title className="text-xl font-bold mb-2 text-light"><strong>{thisReviews.AUTHOR}</strong></Card.Title>
-                                    <Card.Header>{renderStars(thisReviews.SCORE)}</Card.Header>
-                                    <div className="review">
-                                        <p className="text-light">{thisReviews.CONTENT}</p>
-                                    </div>
+                                    <p>{review.CONTENT}</p>
                                 </Card.Body>
                             </Card>
                         ))
                     ) : (
-                        <p className="text-light">Brak recenzji dla tego serialu.</p>
+                        <p>Brak recenzji dla tego serialu.</p>
                     )}
-                </div>
-            </Row>
+                </Card.Body>
+            </Card>
         </Container>
     );
 };

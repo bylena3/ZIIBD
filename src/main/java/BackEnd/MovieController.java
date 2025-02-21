@@ -1,4 +1,4 @@
-package Controller;
+package BackEnd;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +43,11 @@ public class MovieController {
         return jdbcTemplate.queryForList(sql);
     }
 
-
+    @GetMapping("/api/movie_info")
+    public List<Map<String, Object>> getMovieInfo() {
+        String sql = "SELECT m.Title, m.Duration, d.Name || ' ' || d.Surname AS Director, g.Name AS Genre, m.URL, LISTAGG(a.Name || ' ' || a.Surname, ', ') WITHIN GROUP (ORDER BY a.Surname, a.Name) AS Actors FROM Movies m JOIN Directors d ON m.Director_ID = d.Director_ID JOIN Genres g ON m.Genre_ID = g.Genre_ID JOIN MovieCast mc ON m.Movie_ID = mc.Movie_ID JOIN Actors a ON mc.Actor_ID = a.Actor_ID GROUP BY m.Movie_ID, m.Title, m.Duration, m.URL, d.Name, d.Surname, g.Name ORDER BY m.Title\n";
+        return jdbcTemplate.queryForList(sql);
+    }
 
 
 }

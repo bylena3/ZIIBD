@@ -1,4 +1,4 @@
-package Config;
+package BackEnd;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +15,6 @@ public class AuthorizationConfig {
 
     @Bean
     AuthenticationProvider authenticationProvider() {
-        return new AuthorizationProvider();
+        return new UserAuthorizationProvider();
     }
 }

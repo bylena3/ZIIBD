@@ -21,29 +21,103 @@ export const renderStars = (score) => {
 export const MovieContent = () => {
     const [reviews, setReviews] = useState([]);
     const [movieInfo, setMovieInfo] = useState(null);
+    const [reviewContent, setReviewContent] = useState("");
+    const [rating, setRating] = useState(6);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState("");
+    const [submitSuccess, setSubmitSuccess] = useState(false);
     let params = useParams();
 
-    useEffect(() => {
-        // Fetch reviews
-        fetch(`http://localhost:8080/api/movie_reviews`)
-            .then(response => response.json())
-            .then(data => setReviews(data))
-            .catch(error => console.error("Error fetching reviews:", error));
 
-        // Fetch movie info
-        fetch(`http://localhost:8080/api/movie_info`)
-            .then(response => response.json())
-            .then(data => {
-                // Find the movie that matches the current title parameter
-                const movie = data.find(m => m.MOVIE_ID == params.id);
-                setMovieInfo(movie);
-            })
-            .catch(error => console.error("Error fetching movie info:", error));
-    }, [params.id]);
+    const fetchMoviesInfo = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/movie_info`);
+            if (!response.ok) throw new Error("Network response failed");
+
+            const data = await response.json();
+            const movie = data.find(s => s.MOVIE_ID == params.id);
+            setMovieInfo(movie);
+        } catch (error) {
+            console.error("Error fetching series info:", error);
+        }
+    };
+
+    const fetchReviews = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/movie_reviews`);
+            if (!response.ok) throw new Error("Network response failed");
+
+            const data = await response.json();
+            setReviews(data);
+        } catch (error) {
+            console.error("Error fetching reviews:", error);
+        }
+    };
+
+     useEffect(() => {
+            fetchMoviesInfo();
+            fetchReviews();
+        }, []);
 
     const greviews = Array.isArray(reviews)
         ? reviews.filter(rev => rev.MOVIE_ID == params.id)
         : [];
+
+        //////////////////////////////////////////////////////////////////////////////////////
+        const handleFormSubmit = async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+    
+            if (!reviewContent.trim()) {
+                setSubmitError("Wpisz treść recenzji!");
+                return;
+            }
+    
+            setIsSubmitting(true);
+            setSubmitError("");
+            setSubmitSuccess(false);
+    
+            const reviewData = {
+                score: rating,
+                author: "anonymus",
+                series_id: params.id,
+                content: reviewContent
+            };
+    
+            try {
+                console.log("Sending review data:", reviewData);
+                console.log("Request URL: http://localhost:8080/api/reviews/add");
+                console.log("JSON payload:", JSON.stringify(reviewData));
+    
+                const response = await fetch('http://localhost:8080/api/reviews/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(reviewData)
+                });
+    
+    
+                console.log("Response status:", response.status);
+                const responseText = await response.text();
+                console.log("Response body:", responseText);
+    
+                if (response.ok) {
+                    setSubmitSuccess(true);
+                    setReviewContent("");
+                    setRating(6);
+                    
+                } else {
+                    setSubmitError(`Błąd: ${responseText}`);
+                }
+            } catch (error) {
+                console.error("Request error:", error);
+                setSubmitError(`Błąd połączenia: ${error.message}`);
+            } finally {
+                setIsSubmitting(false);
+            }
+        };
+        /////////////////////////////////////////////////////////////////////////////////////////////////
 
     return (
         <Container className="py-4 bs-body-bg bg-black">
@@ -70,12 +144,53 @@ export const MovieContent = () => {
                     </Card.Body>
                 </Card>
             )}
+            <Card className="mt-4" bg="dark" text="light">
+                <Card.Body>
+                    <Card.Title>Dodaj swoją recenzję</Card.Title>
 
-            <InputGroup className="mt-4">
-                <InputGroup.Text className="bg-dark text-light">Podziel się swoją opinią!</InputGroup.Text>
-                <Form.Control as="textarea" aria-label="With textarea" className="bg-dark text-light" />
-                <Button variant="success" id="button-addon2">Wyślij</Button>
-            </InputGroup>
+                    {submitSuccess && (
+                        <div className="alert alert-success">
+                            Recenzja została dodana pomyślnie!
+                        </div>
+                    )}
+
+                    {submitError && (
+                        <div className="alert alert-danger">
+                            {submitError}
+                        </div>
+                    )}
+
+                    <Form onSubmit={handleFormSubmit}>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Twoja ocena:</Form.Label>
+                            <Form.Select
+                                className="bg-dark text-light"
+                                value={rating}
+                                onChange={(e) => setRating(Number(e.target.value))}
+                            >
+                                {[...Array(10)].map((_, i) => (
+                                    <option key={i + 1} value={i + 1}>{i + 1}</option>
+                                ))}
+                            </Form.Select>
+                        </Form.Group>
+
+                        <Form.Group className="mb-3">
+                            <Form.Label>Twoja recenzja:</Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                rows={3}
+                                className="bg-dark text-light"
+                                value={reviewContent}
+                                onChange={(e) => setReviewContent(e.target.value)}
+                                placeholder="Wpisz swoją recenzję..."
+                            />
+                        </Form.Group>
+
+                        <Button type="submit">Wyślij recenzję</Button>
+
+                    </Form>
+                </Card.Body>
+            </Card>
 
             <Row className="g-4 mt-2">
                 <div>

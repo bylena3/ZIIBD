@@ -9,20 +9,18 @@ import SeriesContent from './components/SeriesContent';
 
 function App() {
     return (
-        <body>
         <BrowserRouter>
             <div className="App">
                 <Navigation />
                 <Routes>
-                    <Route path="" element={<MainContent/>}/>
+                    <Route path="" element={<MainContent />} />
                     <Route path="/movies" element={<MoviesPage />} />
                     <Route path="/series" element={<SeriesPage />} />
-                    <Route path="/movies/:id/:title" element={<MovieContent />} /> 
-                    <Route path="/series/:id/:title" element={<SeriesContent />} />  
+                    <Route path="/movies/:id/:title" element={<MovieContent />} />
+                    <Route path="/series/:id/:title" element={<SeriesContent />} />
                 </Routes>
             </div>
         </BrowserRouter>
-        </body>
     );
 }
 

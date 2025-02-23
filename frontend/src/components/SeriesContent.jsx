@@ -51,58 +51,23 @@ export const SeriesContent = () => {
 
 
     const handleFormSubmit = async (e) => {
+        console.log("jeabbie")
         e.preventDefault();
-        e.stopPropagation();
 
-        if (!reviewContent.trim()) {
-            setSubmitError("Wpisz treść recenzji!");
-            return;
-        }
-
-        setIsSubmitting(true);
-        setSubmitError("");
-        setSubmitSuccess(false);
-
-        const reviewData = {
-            score: rating,
-            author: "anonymus",
-            series_id: seriesId,
-            content: reviewContent
-        };
-
-        try {
-            console.log("Sending review data:", reviewData);
-            console.log("Request URL: http://localhost:8080/api/reviews/add");
-            console.log("JSON payload:", JSON.stringify(reviewData));
-
-            const response = await fetch('http://localhost:8080/api/reviews/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(reviewData)
-            });
-
-
-            console.log("Response status:", response.status);
-            const responseText = await response.text();
-            console.log("Response body:", responseText);
-
-            if (response.ok) {
-                setSubmitSuccess(true);
-                setReviewContent("");
-                setRating(6);
-                fetchReviews(); // Odświeżamy listę recenzji
-            } else {
-                setSubmitError(`Błąd: ${responseText}`);
-            }
-        } catch (error) {
-            console.error("Request error:", error);
-            setSubmitError(`Błąd połączenia: ${error.message}`);
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
+      const sendToDatabase=  await fetch("http://localhost:8080/api/reviews/add", {
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                score: rating,
+                 author: 'Anonymus' ,
+                 seriesId: seriesId,
+                 content:reviewContent,
+            })
+        }).catch(e=>console.log(e))
+        console.log(sendToDatabase);
+    }
 
     return (
         <Container className="py-4 bs-body-bg bg-black">
@@ -113,13 +78,13 @@ export const SeriesContent = () => {
                     <Card.Body>
                         <Card.Title className="text-xl font-bold mb-2">{seriesInfo.TITLE}</Card.Title>
                         <Card.Img variant="top" src={seriesInfo.URL} style={{ width: '250px', height: '400px', objectFit: 'cover' }}/>
-                        <Card.Text>
-                            <p><strong>Reżyser:</strong> {seriesInfo.DIRECTOR}</p>
-                            <p><strong>Ilość sezonów:</strong> {seriesInfo.SEASONS}</p>
-                            <p><strong>Średnia długośc odcinka:</strong> {seriesInfo.AVGDURATION} min</p>
-                            <p><strong>Głowni Aktorzy:</strong> {seriesInfo.ACTORS}</p>
-                            <p><strong>Gatunek:</strong> {seriesInfo.GENRE}</p>
-                        </Card.Text>
+                        <div className="card-text">
+                            <div><strong>Reżyser:</strong> {seriesInfo.DIRECTOR}</div>
+                            <div><strong>Ilość sezonów:</strong> {seriesInfo.SEASONS}</div>
+                            <div><strong>Średnia długość odcinka:</strong> {seriesInfo.AVGDURATION} min</div>
+                            <div><strong>Główni Aktorzy:</strong> {seriesInfo.ACTORS}</div>
+                            <div><strong>Gatunek:</strong> {seriesInfo.GENRE}</div>
+                        </div>
                     </Card.Body>
                 </Card>
             ) : (
@@ -147,9 +112,9 @@ export const SeriesContent = () => {
                         </div>
                     )}
 
-                    <Form onSubmit={handleFormSubmit}>
+                    <form onSubmit={handleFormSubmit}>
                         <Form.Group className="mb-3">
-                            <Form.Label>Twoja ocena:</Form.Label>
+                            <label>Twoja ocena:</label>
                             <Form.Select
                                 className="bg-dark text-light"
                                 value={rating}
@@ -169,13 +134,20 @@ export const SeriesContent = () => {
                                 className="bg-dark text-light"
                                 value={reviewContent}
                                 onChange={(e) => setReviewContent(e.target.value)}
-                                placeholder="Wpisz swoją recenzję..."
+                                placeholder="Treść"
                             />
                         </Form.Group>
 
-                        <Button type="submit">Wyślij recenzję</Button>
+                        <Button
+                            variant="success"
+                            type="submit"
+                            disabled={isSubmitting}
 
-                    </Form>
+                        >
+                            {isSubmitting ? 'Wysyłanie...' : 'Wyślij recenzję'}
+                        </Button>
+
+                    </form>
                 </Card.Body>
             </Card>
 
@@ -191,12 +163,12 @@ export const SeriesContent = () => {
                                     <strong>{review.AUTHOR}</strong> - {renderStars(review.SCORE)}
                                 </Card.Header>
                                 <Card.Body>
-                                    <p>{review.CONTENT}</p>
+                                    <div>{review.CONTENT}</div>
                                 </Card.Body>
                             </Card>
                         ))
                     ) : (
-                        <p>Brak recenzji dla tego serialu.</p>
+                        <div>Brak recenzji dla tego serialu.</div>
                     )}
                 </Card.Body>
             </Card>

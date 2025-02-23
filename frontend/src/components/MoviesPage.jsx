@@ -26,7 +26,7 @@ const MoviesPage = () => {
     return (
         <Container className="py-4 bs-body-bg bg-black">
             <h1 className="text-3xl font-bold text-light mb-4">Lista Filmów</h1>
-            <p className="mb-4 text-light">Witaj na stronie z filmami! </p>
+            <div className="mb-4 text-light">Witaj na stronie z filmami! </div>
 
             <Row xs={1} md={2} lg={3} className="g-4">
                 {movies.map((movie) => (
@@ -36,9 +36,9 @@ const MoviesPage = () => {
                                 <Card.Title className="text-xl font-bold mb-2">{movie.TITLE}</Card.Title>
                                 <Card.Img variant="top" src={movie.URL}  style={{ width: '200px', height: '300px', objectFit: 'cover' }}/>
                                 <Card.Text>
-                                    <p><strong>Reżyser:</strong> <a href={"https://pl.wikipedia.org/wiki/" + movie.DIRECTOR_NAME + "_" + movie.DIRECTOR_SURNAME}>{movie.DIRECTOR_NAME} {movie.DIRECTOR_SURNAME}</a></p>
-                                    <p><strong>Długość:</strong> {movie.DURATION} min</p>
-                                    <p><strong>Gatunek:</strong> {movie.GENRE_NAME}</p>
+                                    <div><strong>Reżyser:</strong> <a href={"https://pl.wikipedia.org/wiki/" + movie.DIRECTOR_NAME + "_" + movie.DIRECTOR_SURNAME}>{movie.DIRECTOR_NAME} {movie.DIRECTOR_SURNAME}</a></div>
+                                    <div><strong>Długość:</strong> {movie.DURATION} min</div>
+                                    <div><strong>Gatunek:</strong> {movie.GENRE_NAME}</div>
                                 </Card.Text>
                             </Card.Body>
                             <Card.Body>

@@ -8,5 +8,6 @@ public class Review {
     private Integer score;
     private Integer seriesId;
     private String content;
+    private Integer movieId;
 
 }

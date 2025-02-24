@@ -35,11 +35,11 @@ const MoviesPage = () => {
                             <Card.Body>
                                 <Card.Title className="text-xl font-bold mb-2">{movie.TITLE}</Card.Title>
                                 <Card.Img variant="top" src={movie.URL}  style={{ width: '200px', height: '300px', objectFit: 'cover' }}/>
-                                <Card.Text>
+                                <div className="card-text">
                                     <div><strong>Reżyser:</strong> <a href={"https://pl.wikipedia.org/wiki/" + movie.DIRECTOR_NAME + "_" + movie.DIRECTOR_SURNAME}>{movie.DIRECTOR_NAME} {movie.DIRECTOR_SURNAME}</a></div>
                                     <div><strong>Długość:</strong> {movie.DURATION} min</div>
                                     <div><strong>Gatunek:</strong> {movie.GENRE_NAME}</div>
-                                </Card.Text>
+                                </div>
                             </Card.Body>
                             <Card.Body>
                                 <Card.Link as={Link} to={'' + movie.MOVIE_ID + '/' + movie.TITLE}> <Button variant="success" className="fw-bold text-light">Szczegółowe informacje</Button> </Card.Link>

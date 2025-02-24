@@ -27,6 +27,7 @@ export const MovieContent = () => {
     const [submitError, setSubmitError] = useState("");
     const [submitSuccess, setSubmitSuccess] = useState(false);
     let params = useParams();
+    const movieId = parseInt(params.id)
 
 
     const fetchMoviesInfo = async () => {
@@ -59,65 +60,28 @@ export const MovieContent = () => {
             fetchReviews();
         }, []);
 
-    const greviews = Array.isArray(reviews)
+    const movieReviews = Array.isArray(reviews)
         ? reviews.filter(rev => rev.MOVIE_ID == params.id)
         : [];
 
-        //////////////////////////////////////////////////////////////////////////////////////
-        const handleFormSubmit = async (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-    
-            if (!reviewContent.trim()) {
-                setSubmitError("Wpisz treść recenzji!");
-                return;
-            }
-    
-            setIsSubmitting(true);
-            setSubmitError("");
-            setSubmitSuccess(false);
-    
-            const reviewData = {
+    const handleFormSubmit = async (e) => {
+        e.preventDefault();
+
+        const sendToDatabase=  await fetch("http://localhost:8080/api/reviews/addm", {
+            method: 'POST',
+            headers:{
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
                 score: rating,
-                author: "anonymus",
-                series_id: params.id,
-                content: reviewContent
-            };
-    
-            try {
-                console.log("Sending review data:", reviewData);
-                console.log("Request URL: http://localhost:8080/api/reviews/add");
-                console.log("JSON payload:", JSON.stringify(reviewData));
-    
-                const response = await fetch('http://localhost:8080/api/reviews/add', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(reviewData)
-                });
-    
-    
-                console.log("Response status:", response.status);
-                const responseText = await response.text();
-                console.log("Response body:", responseText);
-    
-                if (response.ok) {
-                    setSubmitSuccess(true);
-                    setReviewContent("");
-                    setRating(6);
-                    
-                } else {
-                    setSubmitError(`Błąd: ${responseText}`);
-                }
-            } catch (error) {
-                console.error("Request error:", error);
-                setSubmitError(`Błąd połączenia: ${error.message}`);
-            } finally {
-                setIsSubmitting(false);
-            }
-        };
-        /////////////////////////////////////////////////////////////////////////////////////////////////
+                author: 'Anonymus' ,
+                movieId: movieId,
+                content:reviewContent,
+            })
+        }).catch(e=>console.log(e))
+        console.log(sendToDatabase);
+    }
+
 
     return (
         <Container className="py-4 bs-body-bg bg-black">
@@ -129,12 +93,12 @@ export const MovieContent = () => {
                     <Card.Body>
                         <Card.Title className="text-xl font-bold mb-2">{movieInfo.TITLE}</Card.Title>
                         <Card.Img variant="top" src={movieInfo.URL} style={{ width: '250px', height: '400px', objectFit: 'cover' }}/>
-                        <Card.Text>
-                            <p><strong>Reżyser:</strong> {movieInfo.DIRECTOR}</p>
-                            <p><strong>Długość:</strong> {movieInfo.DURATION} min</p>
-                            <p><strong>Głowni Aktorzy:</strong> {movieInfo.ACTORS}</p>
-                            <p><strong>Gatunek:</strong> {movieInfo.GENRE}</p>
-                        </Card.Text>
+                        <div className="card-text">
+                            <div><strong>Reżyser:</strong> {movieInfo.DIRECTOR}</div>
+                            <div><strong>Długość:</strong> {movieInfo.DURATION} min</div>
+                            <div><strong>Głowni Aktorzy:</strong> {movieInfo.ACTORS}</div>
+                            <div><strong>Gatunek:</strong> {movieInfo.GENRE}</div>
+                        </div>
                     </Card.Body>
                 </Card>
             ) : (
@@ -160,9 +124,9 @@ export const MovieContent = () => {
                         </div>
                     )}
 
-                    <Form onSubmit={handleFormSubmit}>
+                    <form onSubmit={handleFormSubmit}>
                         <Form.Group className="mb-3">
-                            <Form.Label>Twoja ocena:</Form.Label>
+                            <label>Twoja ocena:</label>
                             <Form.Select
                                 className="bg-dark text-light"
                                 value={rating}
@@ -182,22 +146,30 @@ export const MovieContent = () => {
                                 className="bg-dark text-light"
                                 value={reviewContent}
                                 onChange={(e) => setReviewContent(e.target.value)}
-                                placeholder="Wpisz swoją recenzję..."
+                                placeholder="Treść"
                             />
                         </Form.Group>
 
-                        <Button type="submit">Wyślij recenzję</Button>
+                        <Button
+                            variant="success"
+                            type="submit"
+                            disabled={isSubmitting}
 
-                    </Form>
+                        >
+                            {isSubmitting ? 'Wysyłanie...' : 'Wyślij recenzję'}
+                        </Button>
+
+                    </form>
                 </Card.Body>
             </Card>
+            {/* Lista recenzji */}
+            <Card className="mt-4" bg="dark" text="light">
+                <Card.Body>
+                    <Card.Title>Recenzje</Card.Title>
 
-            <Row className="g-4 mt-2">
-                <div>
-                    <h3 className="text-light">Recenzje</h3>
-                    {greviews.length > 0 ? (
-                        greviews.map(thisReviews => (
-                            <Card key={thisReviews.REVIEW_ID} className="h-100 shadow-sm mb-3" bg="dark" text="light">
+                    {movieReviews.length > 0 ? (
+                        movieReviews.map(thisReviews => (
+                            <Card key={thisReviews.REVIEW_ID} className="mb-3" bg="secondary" text="light">
                                 <Card.Body>
                                     <Card.Title className="text-xl font-bold mb-2 text-light"><strong>{thisReviews.AUTHOR}</strong></Card.Title>
                                     <Card.Header>{renderStars(thisReviews.SCORE)}</Card.Header>
@@ -208,10 +180,10 @@ export const MovieContent = () => {
                             </Card>
                         ))
                     ) : (
-                        <p className="text-light">Brak recenzji dla tego filmu.</p>
+                        <div className="text-light">Brak recenzji dla tego filmu.</div>
                     )}
-                </div>
-            </Row>
+                </Card.Body>
+            </Card>
         </Container>
     );
 };

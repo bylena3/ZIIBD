@@ -51,7 +51,6 @@ export const SeriesContent = () => {
 
 
     const handleFormSubmit = async (e) => {
-        console.log("jeabbie")
         e.preventDefault();
 
       const sendToDatabase=  await fetch("http://localhost:8080/api/reviews/add", {

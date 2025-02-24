@@ -49,9 +49,23 @@ export const SeriesContent = () => {
         ? reviews.filter(rev => rev.SERIES_ID == seriesId)
         : [];
 
+    const handleDeleteReview = async (reviewId) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/reviews/${reviewId}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) throw new Error("Failed to delete review");
+
+            // Refresh reviews after deletion
+            fetchReviews();
+        } catch (error) {
+            console.error("Error deleting review:", error);
+        }
+    };
 
     const handleFormSubmit = async (e) => {
-        e.preventDefault();
+        fetchReviews();
 
       const sendToDatabase=  await fetch("http://localhost:8080/api/reviews/add", {
             method: 'POST',
@@ -156,13 +170,26 @@ export const SeriesContent = () => {
                     <Card.Title>Recenzje</Card.Title>
 
                     {seriesReviews.length > 0 ? (
-                        seriesReviews.map(review => (
-                            <Card key={review.REVIEW_ID} className="mb-3" bg="secondary" text="light">
-                                <Card.Header>
-                                    <strong>{review.AUTHOR}</strong> - {renderStars(review.SCORE)}
-                                </Card.Header>
+                        seriesReviews.map(thisReviews => (
+                            <Card key={thisReviews.REVIEW_ID} className="mb-3" bg="secondary" text="light">
                                 <Card.Body>
-                                    <div>{review.CONTENT}</div>
+                                    <div className="d-flex justify-content-between align-items-start">
+                                        <Card.Title className="text-xl font-bold mb-2 text-light">
+                                            <strong>{thisReviews.AUTHOR}</strong>
+                                        </Card.Title>
+                                        <Button
+                                            variant="danger"
+                                            size="sm"
+                                            onClick={() => handleDeleteReview(thisReviews.REVIEW_ID)}
+                                            className="ms-2"
+                                        >
+                                            X
+                                        </Button>
+                                    </div>
+                                    <Card.Header>{renderStars(thisReviews.SCORE)}</Card.Header>
+                                    <div className="review">
+                                        <p className="text-light">{thisReviews.CONTENT}</p>
+                                    </div>
                                 </Card.Body>
                             </Card>
                         ))

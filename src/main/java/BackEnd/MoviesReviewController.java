@@ -54,5 +54,21 @@ public class MoviesReviewController {
             return ResponseEntity.status(500).body("Błąd podczas zapisywania recenzji: " + e.getMessage());
         }
     }
+    @DeleteMapping("/api/reviews/{reviewId}")
+    public ResponseEntity<String> deleteReview(@PathVariable Integer reviewId) {
+        try {
+            String sql = "DELETE FROM reviews WHERE review_id = ?";
+            int rowsAffected = jdbcTemplate.update(sql, reviewId);
 
+            if (rowsAffected > 0) {
+                jdbcTemplate.execute("COMMIT");
+                return ResponseEntity.ok("Recenzja została usunięta");
+            } else {
+                return ResponseEntity.status(404).body("Nie znaleziono recenzji o podanym ID");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Błąd podczas usuwania recenzji: " + e.getMessage());
+        }
+    }
 }

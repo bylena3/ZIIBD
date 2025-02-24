@@ -54,8 +54,23 @@ export const MovieContent = () => {
             console.error("Error fetching reviews:", error);
         }
     };
+    const handleDeleteReview = async (reviewId) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/reviews/${reviewId}`, {
+                method: 'DELETE',
+            });
 
-     useEffect(() => {
+            if (!response.ok) throw new Error("Failed to delete review");
+
+            // Refresh reviews after deletion
+            fetchReviews();
+        } catch (error) {
+            console.error("Error deleting review:", error);
+        }
+    };
+
+
+    useEffect(() => {
             fetchMoviesInfo();
             fetchReviews();
         }, []);
@@ -65,7 +80,7 @@ export const MovieContent = () => {
         : [];
 
     const handleFormSubmit = async (e) => {
-        e.preventDefault();
+        fetchReviews();
 
         const sendToDatabase=  await fetch("http://localhost:8080/api/reviews/addm", {
             method: 'POST',
@@ -171,7 +186,19 @@ export const MovieContent = () => {
                         movieReviews.map(thisReviews => (
                             <Card key={thisReviews.REVIEW_ID} className="mb-3" bg="secondary" text="light">
                                 <Card.Body>
-                                    <Card.Title className="text-xl font-bold mb-2 text-light"><strong>{thisReviews.AUTHOR}</strong></Card.Title>
+                                    <div className="d-flex justify-content-between align-items-start">
+                                        <Card.Title className="text-xl font-bold mb-2 text-light">
+                                            <strong>{thisReviews.AUTHOR}</strong>
+                                        </Card.Title>
+                                        <Button
+                                            variant="danger"
+                                            size="sm"
+                                            onClick={() => handleDeleteReview(thisReviews.REVIEW_ID)}
+                                            className="ms-2"
+                                        >
+                                            X
+                                        </Button>
+                                    </div>
                                     <Card.Header>{renderStars(thisReviews.SCORE)}</Card.Header>
                                     <div className="review">
                                         <p className="text-light">{thisReviews.CONTENT}</p>

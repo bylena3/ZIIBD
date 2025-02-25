@@ -69,7 +69,7 @@ export const MainContent = () => {
                                             <Card.Img variant="top" src={topmovie.URL}  style={{ width: '200px', height: '300px', objectFit: 'cover' }}/>
                                         </Card.Body>
                                         <Card.Body>
-                                            <Card.Link as={Link} to={'movies/'+ topmovie.MOVIE_ID + '/' + topmovie.TITLE}> <Button variant="success" className="fw-bold text-light">Szczegółowe informacje</Button> </Card.Link>
+                                            <Card.Link as={Link} to={'movies/'+ topmovie.SERIES_ID + '/' + topmovie.TITLE}> <Button variant="success" className="fw-bold text-light">Szczegółowe informacje</Button> </Card.Link>
                                         </Card.Body>
                                     </Card>
                                 </Col>

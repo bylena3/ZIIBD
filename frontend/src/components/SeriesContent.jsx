@@ -97,6 +97,8 @@ export const SeriesContent = () => {
                             <div><strong>Średnia długość odcinka:</strong> {seriesInfo.AVGDURATION} min</div>
                             <div><strong>Główni Aktorzy:</strong> {seriesInfo.ACTORS}</div>
                             <div><strong>Gatunek:</strong> {seriesInfo.GENRE}</div>
+                            <div className="mt-3"><strong>Opis:</strong></div>
+                            <div className="mt-1">{seriesInfo.DESCRIPTION}</div>
                         </div>
                     </Card.Body>
                 </Card>

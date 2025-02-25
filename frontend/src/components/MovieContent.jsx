@@ -113,6 +113,8 @@ export const MovieContent = () => {
                             <div><strong>Długość:</strong> {movieInfo.DURATION} min</div>
                             <div><strong>Głowni Aktorzy:</strong> {movieInfo.ACTORS}</div>
                             <div><strong>Gatunek:</strong> {movieInfo.GENRE}</div>
+                            <div className="mt-3"><strong>Opis:</strong></div>
+                            <div className="mt-1">{movieInfo.DESCRIPTION}</div>
                         </div>
                     </Card.Body>
                 </Card>

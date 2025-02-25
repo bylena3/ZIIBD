@@ -25,9 +25,9 @@ const SeriesPage = () => {
                                 <Card.Title className="text-xl font-bold mb-2">{show.TITLE}</Card.Title>
                                 <Card.Text>
                                     <Card.Img variant="top" src={show.URL}  style={{ width: '200px', height: '300px', objectFit: 'cover' }}/>
-                                    <p><strong>Twórca/główny reżyser:</strong> <a href={"https://pl.wikipedia.org/wiki/" + show.DIRECTOR_NAME + "_" + show.DIRECTOR_SURNAME}>{show.DIRECTOR_NAME} {show.DIRECTOR_SURNAME}</a></p>
-                                    <p><strong>Liczba sezonów:</strong> {show.SEASONS}</p>
-                                    <p><strong>Getunek:</strong> {show.GENRE_NAME}</p>
+                                    <div><strong>Twórca/główny reżyser:</strong> <a href={"https://pl.wikipedia.org/wiki/" + show.DIRECTOR_NAME + "_" + show.DIRECTOR_SURNAME}>{show.DIRECTOR_NAME} {show.DIRECTOR_SURNAME}</a></div>
+                                    <div><strong>Liczba sezonów:</strong> {show.SEASONS}</div>
+                                    <div><strong>Getunek:</strong> {show.GENRE_NAME}</div>
                                 </Card.Text>
                             </Card.Body>
                             <Card.Body>

@@ -27,7 +27,7 @@ public class MovieController {
 
     @GetMapping("/api/top_media")
     public List<Map<String, Object>> getTopSeries() {
-        String sql = "SELECT series_ID, title, URL FROM series WHERE ROWNUM <=3 UNION ALL SELECT movie_id, title, URL FROM movies WHERE ROWNUM <=3";
+        String sql = "SELECT series.series_ID AS series_id, title, URL FROM series WHERE ROWNUM <=3 UNION ALL SELECT movies.movie_id as movie_id, title, URL FROM movies WHERE ROWNUM <=3";
         return jdbcTemplate.queryForList(sql);
     }
 

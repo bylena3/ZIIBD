@@ -26,8 +26,7 @@ export const MainContent = () => {
 
     const randomGreeting = greetings[Math.floor(Math.random() * greetings.length)];
 
-    useEffect(() => {
-        const fetchtopmovies = async () => {
+    const fetchtopmovies = async () => {
         fetch('http://localhost:8080/api/top_media', {
             method: 'GET',
             mode: 'cors',
@@ -39,10 +38,21 @@ export const MainContent = () => {
             .then(response => response.json())
             .then(data => setMovies(data))
             .catch(error => console.error('Error fetching movies:', error));
-        }
+    }
+    useEffect(() => {
         fetchtopmovies();
     }, []);
 
+    function createPath(topmovie){
+        if(topmovies.SERIES_ID == null){
+            console.log(topmovies);
+            return 'movies/' + topmovie.MOVIE_ID + '/' + topmovie.TITLE;
+        }
+        if(topmovies.MOVIE_ID == null){
+            console.log("SSSSS" + topmovies[1]);
+            return 'movies/' + topmovies.SERIES_ID + '/' + topmovies.TITLE;
+        }
+    }
 
     return (
     
@@ -52,14 +62,14 @@ export const MainContent = () => {
 
             <Row xs={1} md={2} lg={3} className="g-4">
                             {topmovies.map((topmovie) => (
-                                <Col key={topmovie.MOVIE_ID}>
+                                <Col key={topmovie.SERIES_ID}>
                                     <Card className="h-100 shadow-sm" bg="dark" text="light">
                                         <Card.Body>
                                             <Card.Title className="text-xl font-bold mb-2">{topmovie.TITLE}</Card.Title>
                                             <Card.Img variant="top" src={topmovie.URL}  style={{ width: '200px', height: '300px', objectFit: 'cover' }}/>
                                         </Card.Body>
                                         <Card.Body>
-                                            <Card.Link as={Link} to={''+ topmovie.MOVIE_ID}> <Button variant="success" className="fw-bold text-light">Szczegółowe informacje</Button> </Card.Link>
+                                            <Card.Link as={Link} to={'movies/'+ topmovie.MOVIE_ID + '/' + topmovie.TITLE}> <Button variant="success" className="fw-bold text-light">Szczegółowe informacje</Button> </Card.Link>
                                         </Card.Body>
                                     </Card>
                                 </Col>

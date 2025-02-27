@@ -1,10 +1,34 @@
 package BackEnd;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 import java.util.Map;
+
+
+ class ReviewUpdateRequest {
+    private int score;
+    private String content;
+
+    // Getters and setters
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+}
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -54,6 +78,25 @@ public class MovieController {
         String sql = "SELECT s.series_id, s.Title, s.URL, s.Seasons, s.AvgDuration, s.Description, d.Name || ' ' || d.Surname AS Director, g.Name AS Genre, LISTAGG(a.Name || ' ' || a.Surname, ', ') WITHIN GROUP (ORDER BY a.Surname, a.Name) AS Actors FROM Series s JOIN Directors d ON s.Director_ID = d.Director_ID JOIN Genres g ON s.Genre_ID = g.Genre_ID JOIN SeriesCast sc ON s.Series_ID = sc.Series_ID JOIN Actors a ON sc.Actor_ID = a.Actor_ID GROUP BY s.Series_ID, s.Title, s.URL, s.Seasons, s.AvgDuration, s.Description, d.Name, d.Surname, g.Name ORDER BY s.Title";
         return jdbcTemplate.queryForList(sql);
     }
+
+    @PutMapping("/api/reviews/{reviewId}")
+    public ResponseEntity<?> updateReview(@PathVariable Long reviewId, @RequestBody ReviewUpdateRequest request) {
+        try {
+            String sql = "UPDATE reviews SET score = ?, content = ? WHERE review_id = ?";
+            int rowsAffected = jdbcTemplate.update(sql, request.getScore(), request.getContent(), reviewId);
+
+            if (rowsAffected > 0) {
+                return ResponseEntity.ok().body(Map.of("message", "Review updated successfully"));
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        }
+    }
+
+    // Add this class to represent the request body
+
 
 }
 

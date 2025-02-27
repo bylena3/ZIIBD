@@ -11,6 +11,9 @@ export const SeriesContent = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState("");
     const [submitSuccess, setSubmitSuccess] = useState(false);
+    const [editingReviewId, setEditingReviewId] = useState(null);
+    const [editContent, setEditContent] = useState("");
+    const [editRating, setEditRating] = useState(6);
 
     let params = useParams();
     const seriesId = parseInt(params.id);
@@ -64,19 +67,54 @@ export const SeriesContent = () => {
         }
     };
 
+    const handleEditReview = (review) => {
+        setEditingReviewId(review.REVIEW_ID);
+        setEditContent(review.CONTENT);
+        setEditRating(review.SCORE);
+    };
+
+    const handleCancelEdit = () => {
+        setEditingReviewId(null);
+        setEditContent("");
+        setEditRating(6);
+    };
+
+    const handleUpdateReview = async (reviewId) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/reviews/${reviewId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    score: editRating,
+                    content: editContent,
+                }),
+            });
+
+            if (!response.ok) throw new Error("Failed to update review");
+
+            // Reset editing state and refresh reviews
+            setEditingReviewId(null);
+            fetchReviews();
+        } catch (error) {
+            console.error("Error updating review:", error);
+        }
+    };
+
     const handleFormSubmit = async (e) => {
         fetchReviews();
 
-      const sendToDatabase=  await fetch("http://localhost:8080/api/reviews/add", {
+        const sendToDatabase=  await fetch("http://localhost:8080/api/reviews/add", {
             method: 'POST',
             headers:{
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 score: rating,
-                 author: 'Anonymus' ,
-                 seriesId: seriesId,
-                 content:reviewContent,
+                author: 'Anonymus' ,
+                seriesId: seriesId,
+                content:reviewContent,
             })
         }).catch(e=>console.log(e))
         console.log(sendToDatabase);
@@ -175,23 +213,84 @@ export const SeriesContent = () => {
                         seriesReviews.map(thisReviews => (
                             <Card key={thisReviews.REVIEW_ID} className="mb-3" bg="secondary" text="light">
                                 <Card.Body>
-                                    <div className="d-flex justify-content-between align-items-start">
-                                        <Card.Title className="text-xl font-bold mb-2 text-light">
-                                            <strong>{thisReviews.AUTHOR}</strong>
-                                        </Card.Title>
-                                        <Button
-                                            variant="danger"
-                                            size="sm"
-                                            onClick={() => handleDeleteReview(thisReviews.REVIEW_ID)}
-                                            className="ms-2"
-                                        >
-                                            X
-                                        </Button>
-                                    </div>
-                                    <Card.Header>{renderStars(thisReviews.SCORE)}</Card.Header>
-                                    <div className="review">
-                                        <p className="text-light">{thisReviews.CONTENT}</p>
-                                    </div>
+                                    {editingReviewId === thisReviews.REVIEW_ID ? (
+                                        /* Edycja recenzji */
+                                        <div>
+                                            <Card.Title className="text-xl font-bold mb-2 text-light">
+                                                <strong>{thisReviews.AUTHOR}</strong>
+                                            </Card.Title>
+
+                                            <Form.Group className="mb-3">
+                                                <label className="text-light">Twoja ocena:</label>
+                                                <Form.Select
+                                                    className="bg-dark text-light"
+                                                    value={editRating}
+                                                    onChange={(e) => setEditRating(Number(e.target.value))}
+                                                >
+                                                    {[...Array(10)].map((_, i) => (
+                                                        <option key={i + 1} value={i + 1}>{i + 1}</option>
+                                                    ))}
+                                                </Form.Select>
+                                            </Form.Group>
+
+                                            <Form.Group className="mb-3">
+                                                <Form.Control
+                                                    as="textarea"
+                                                    rows={3}
+                                                    className="bg-dark text-light"
+                                                    value={editContent}
+                                                    onChange={(e) => setEditContent(e.target.value)}
+                                                />
+                                            </Form.Group>
+
+                                            <div className="d-flex gap-2">
+                                                <Button
+                                                    variant="success"
+                                                    size="sm"
+                                                    onClick={() => handleUpdateReview(thisReviews.REVIEW_ID)}
+                                                >
+                                                    Zapisz
+                                                </Button>
+                                                <Button
+                                                    variant="secondary"
+                                                    size="sm"
+                                                    onClick={handleCancelEdit}
+                                                >
+                                                    Anuluj
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        /* Wyświetlanie recenzji */
+                                        <>
+                                            <div className="d-flex justify-content-between align-items-start">
+                                                <Card.Title className="text-xl font-bold mb-2 text-light">
+                                                    <strong>{thisReviews.AUTHOR}</strong>
+                                                </Card.Title>
+                                                <div>
+                                                    <Button
+                                                        variant="primary"
+                                                        size="sm"
+                                                        onClick={() => handleEditReview(thisReviews)}
+                                                        className="me-2"
+                                                    >
+                                                        Edytuj
+                                                    </Button>
+                                                    <Button
+                                                        variant="danger"
+                                                        size="sm"
+                                                        onClick={() => handleDeleteReview(thisReviews.REVIEW_ID)}
+                                                    >
+                                                        X
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                            <Card.Header>{renderStars(thisReviews.SCORE)}</Card.Header>
+                                            <div className="review">
+                                                <p className="text-light">{thisReviews.CONTENT}</p>
+                                            </div>
+                                        </>
+                                    )}
                                 </Card.Body>
                             </Card>
                         ))

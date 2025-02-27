@@ -23,12 +23,12 @@ const SeriesPage = () => {
                         <Card className="h-100 shadow-sm" bg="dark" text="light">
                             <Card.Body>
                                 <Card.Title className="text-xl font-bold mb-2">{show.TITLE}</Card.Title>
-                                <Card.Text>
+                                <div className="card-text">
                                     <Card.Img variant="top" src={show.URL}  style={{ width: '200px', height: '300px', objectFit: 'cover' }}/>
                                     <div><strong>Twórca/główny reżyser:</strong> <a href={"https://pl.wikipedia.org/wiki/" + show.DIRECTOR_NAME + "_" + show.DIRECTOR_SURNAME}>{show.DIRECTOR_NAME} {show.DIRECTOR_SURNAME}</a></div>
                                     <div><strong>Liczba sezonów:</strong> {show.SEASONS}</div>
                                     <div><strong>Getunek:</strong> {show.GENRE_NAME}</div>
-                                </Card.Text>
+                                </div>
                             </Card.Body>
                             <Card.Body>
                                 <Card.Link as={Link} to={'' + show.SERIES_ID + '/' + show.TITLE} > <Button variant="success" className="fw-bold text-light">Szczegółowe informacje</Button> </Card.Link>

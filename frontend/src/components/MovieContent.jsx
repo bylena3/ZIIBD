@@ -1,6 +1,5 @@
 import React, { useState, useEffect} from "react";
 import { Card, Container, Row, Col, InputGroup, Form, Button } from 'react-bootstrap';
-import { Link } from "react-router-dom";
 import { useParams } from "react-router";
 import "./MovieStyles.css";
 
@@ -101,7 +100,6 @@ export const MovieContent = () => {
 
             if (!response.ok) throw new Error("Failed to update review");
 
-            // Reset editing state and refresh reviews
             setEditingReviewId(null);
             fetchReviews();
         } catch (error) {

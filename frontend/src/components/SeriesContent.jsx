@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { useParams } from "react-router-dom";
 import { renderStars } from "./MovieContent";
-import "./MovieStyles.css"; // Reusing the same stylesheet
+import "./MovieStyles.css";
 
 export const SeriesContent = () => {
     const [reviews, setReviews] = useState([]);
@@ -61,7 +61,6 @@ export const SeriesContent = () => {
 
             if (!response.ok) throw new Error("Failed to delete review");
 
-            // Refresh reviews after deletion
             fetchReviews();
         } catch (error) {
             console.error("Error deleting review:", error);
@@ -95,7 +94,6 @@ export const SeriesContent = () => {
 
             if (!response.ok) throw new Error("Failed to update review");
 
-            // Reset editing state and refresh reviews
             setEditingReviewId(null);
             fetchReviews();
         } catch (error) {
@@ -124,15 +122,11 @@ export const SeriesContent = () => {
 
             if (!response.ok) throw new Error("Failed to submit review");
 
-            // Reset form and show success message
             setReviewContent("");
             setRating(6);
             setSubmitSuccess(true);
-
-            // Refresh reviews to show the new one
             fetchReviews();
 
-            // Hide success message after 5 seconds
             setTimeout(() => {
                 setSubmitSuccess(false);
             }, 5000);

@@ -22,15 +22,15 @@ const Navigation = () => {
               <Nav.Link as={Link} to="/movies">Filmy</Nav.Link>
               <Nav.Link as={Link} to="/series">Seriale</Nav.Link>
             </Nav>
-            <Form className="d-flex">
-              <Form.Control
-                  type="search"
-                  placeholder="Szukaj"
-                  className="me-2"
-                  aria-label="Search"
-              />
-              <Button variant="outline-success">Szukaj</Button>
-            </Form>
+            {/*<Form className="d-flex">*/}
+            {/*  <Form.Control*/}
+            {/*      type="search"*/}
+            {/*      placeholder="Szukaj"*/}
+            {/*      className="me-2"*/}
+            {/*      aria-label="Search"*/}
+            {/*  />*/}
+            {/*  <Button variant="outline-success">Szukaj</Button>*/}
+            {/*</Form>*/}
           </Navbar.Collapse>
         </Container>
       </Navbar>

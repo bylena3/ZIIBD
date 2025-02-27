@@ -1,4 +1,3 @@
-/* Movie content general styling */
 .movie-content-wrapper {
     min-height: 100vh;
     background-color: #141414;
@@ -6,7 +5,6 @@
     font-family: 'Roboto', 'Segoe UI', sans-serif;
 }
 
-/* Movie header section */
 .movie-header {
     margin-bottom: 3rem;
     background: rgba(20, 20, 20, 0.8);
@@ -15,7 +13,6 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
-/* Poster styling */
 .movie-poster {
     position: relative;
     border-radius: 8px;
@@ -35,7 +32,6 @@
     border-radius: 8px;
 }
 
-/* Rating circle */
 .movie-rating {
     position: absolute;
     top: 10px;
@@ -75,7 +71,6 @@
     opacity: 0.8;
 }
 
-/* Movie details styling */
 .movie-details {
     height: 100%;
     display: flex;
@@ -136,7 +131,6 @@
     text-align: justify;
 }
 
-/* Loading spinner */
 .loading-container {
     display: flex;
     flex-direction: column;
@@ -160,7 +154,6 @@
     100% { transform: rotate(360deg); }
 }
 
-/* Reviews section styling */
 .reviews-section {
     background: rgba(20, 20, 20, 0.8);
     border-radius: 8px;
@@ -179,7 +172,6 @@
     padding-bottom: 0.5rem;
 }
 
-/* Add review card styling */
 .add-review-card {
     background: rgba(30, 30, 30, 0.8);
     border-radius: 8px;
@@ -249,8 +241,8 @@
     box-shadow: 0 0 0 0.2rem rgba(245, 175, 25, 0.25);
 }
 .review-textarea::placeholder {
-    color: #f5af19; /* Zmienia kolor domyślnego tekstu */
-    opacity: 0.7; /* Trochę przezroczysty */
+    color: #f5af19;
+    opacity: 0.7;
 }
 .submit-review-btn {
     background-color: #f5af19;
@@ -271,7 +263,6 @@
     border-color: #ccc;
 }
 
-/* Reviews list styling */
 .reviews-list {
     margin-top: 3rem;
 }
@@ -359,7 +350,6 @@
     color: #f3f3f3;
 }
 
-/* Edit review form styling */
 .review-edit-form {
     display: flex;
     flex-direction: column;
@@ -392,7 +382,6 @@
     padding: 0.4rem 1.25rem;
 }
 
-/* Alert styles */
 .alert {
     padding: 1rem;
     margin-bottom: 1.5rem;
@@ -421,44 +410,178 @@
     100% { opacity: 0; }
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .movie-header {
-        padding: 1rem;
-    }
-
-    .poster-col {
-        margin-bottom: 2rem;
-    }
-
-    .movie-title {
-        font-size: 2rem;
-    }
-
-    .review-header {
-        flex-direction: column;
-    }
-
-    .review-actions {
-        margin-top: 1rem;
-    }
-
-    .rating-group {
-        flex-direction: column;
-        align-items: flex-start;
-    }
+.movie-card {
+    background-color: rgba(30, 30, 30, 0.8) !important;
+    border: none !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4) !important;
 }
 
-@media (max-width: 576px) {
-    .movie-description {
-        padding: 1rem;
-    }
+.movie-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.6) !important;
+}
 
-    .add-review-card {
-        padding: 1rem;
-    }
+.movie-card-title {
+    color: #ffffff;
+    font-size: 1.4rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    border-bottom: 2px solid rgba(245, 175, 25, 0.4);
+    padding-bottom: 0.5rem;
+}
 
-    .review-card {
-        padding: 1rem;
-    }
+.movie-card-image-container {
+    position: relative;
+    max-width: 300px;
+    overflow: hidden;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+.movie-card-image {
+    width: 100% !important;
+    height: 400px !important;
+    object-fit: cover !important;
+    transition: transform 0.5s ease;
+}
+
+.movie-card:hover .movie-card-image {
+    transform: scale(1.05);
+}
+
+.movie-card-details {
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+.movie-card-info {
+    margin-bottom: 0.5rem;
+    color: #71715d;
+    line-height: 1.5;
+}
+
+.movie-details-btn {
+    background-color: #0a91b8 !important;
+    border-color: #0a91b8 !important;
+    font-weight: 600;
+    padding: 0.5rem 1.5rem;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.movie-details-btn:hover {
+    background-color: #077a9b !important;
+    border-color: #077a9b !important;
+    transform: translateY(-2px);
+}
+
+.director-link {
+    color: #66c2ff;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.director-link:hover {
+    color: #f5af19;
+    text-decoration: underline;
+}
+
+.series-seasons {
+    color: #f5af19;
+    font-weight: 500;
+}
+
+.featured-card {
+    background-color: rgba(20, 20, 20, 0.9) !important;
+    border: 1px solid rgba(245, 175, 25, 0.3) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6) !important;
+}
+
+.featured-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7) !important;
+    border: 1px solid rgba(245, 175, 25, 0.6) !important;
+}
+
+.featured-title {
+    color: #f5af19;
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1rem;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.featured-image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    margin: 0 auto 1.5rem;
+    width: 85%;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.featured-image {
+    width: 100% !important;
+    max-width: 200px;
+    height: 400px !important;
+    object-fit: contain !important;
+    transition: transform 0.6s ease;
+}
+
+.featured-card:hover .featured-image {
+    transform: scale(1.08);
+}
+
+.featured-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: linear-gradient(135deg, #f12711, #f5af19);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.featured-details-btn {
+    background-color: #f5af19 !important;
+    border-color: #f5af19 !important;
+    font-weight: 600;
+    padding: 0.5rem 1.5rem;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.featured-details-btn:hover {
+    background-color: #e09400 !important;
+    border-color: #e09400 !important;
+    transform: translateY(-2px);
+}
+
+.greeting-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #f5af19;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.golden-line {
+    height: 3px;
+    //background: linear-gradient;
+    color: gold;
 }

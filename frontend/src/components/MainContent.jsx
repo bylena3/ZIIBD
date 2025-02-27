@@ -1,9 +1,11 @@
-import React, { useState, useEffect,} from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Container, Row, Col, Button } from 'react-bootstrap';
-import { data, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
+import "./MovieStyles.css";
 
 export const MainContent = () => {
-    const [topmovies, setMovies] = useState([]);
+    const [topMovies, setMovies] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const greetings = [
         "Witaj, niebywały kinomanie! Światła, kamera… akcja!",
@@ -22,60 +24,90 @@ export const MainContent = () => {
         "Niech Moc filmów będzie z Tobą, młody padawanie.",
         "Powrót do przyszłości? A może raczej powrót do ulubionych klasyków?",
         "Czy to ptak? Czy to samolot? Nie, to kolejny świetny film do obejrzenia!",
-    ]
+    ];
 
     const randomGreeting = greetings[Math.floor(Math.random() * greetings.length)];
 
-    const fetchtopmovies = async () => {
-        fetch('http://localhost:8080/api/top_media', {
-            method: 'GET',
-            mode: 'cors',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(response => response.json())
-            .then(data => setMovies(data))
-            .catch(error => console.error('Error fetching movies:', error));
-    }
+    const fetchTopMovies = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetch('http://localhost:8080/api/top_media', {
+                method: 'GET',
+                mode: 'cors',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) throw new Error("Network response failed");
+
+            const data = await response.json();
+            setMovies(data);
+        } catch (error) {
+            console.error('Error fetching top media:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     useEffect(() => {
-        fetchtopmovies();
+        fetchTopMovies();
     }, []);
 
-    function createPath(topmovie){
-        if(topmovies.SERIES_ID == null){
-            console.log(topmovies);
-            return 'movies/' + topmovie.MOVIE_ID + '/' + topmovie.TITLE;
+    function createPath(topMovie) {
+        if (topMovie.SERIES_ID == null) {
+            return `movies/${topMovie.MOVIE_ID}/${topMovie.TITLE}`;
         }
-        if(topmovies.MOVIE_ID == null){
-            console.log("SSSSS" + topmovies[1]);
-            return 'movies/' + topmovies.SERIES_ID + '/' + topmovies.TITLE;
+        if (topMovie.MOVIE_ID == null) {
+            return `series/${topMovie.SERIES_ID}/${topMovie.TITLE}`;
         }
     }
 
     return (
-    
-        <Container className="py-4 bs-body-bg bg-black">
-            <h1 className="text-3xl font-bold text-light mb-4">{randomGreeting}</h1>
-            <p className="mb-4 text-light"> Oto najpopularniejsze filmy i seriale! </p>
+        <div className="movie-content-wrapper">
+            <Container className="py-5">
+                <div className="movie-header">
+                    <h1 className="greeting-title text-center">{randomGreeting}</h1>
+                    <div className="golden-line"></div>
+                    <p className="text-center highlight-text mb-4">Oto najpopularniejsze filmy i seriale!</p>
+                </div>
 
-            <Row xs={1} md={2} lg={3} className="g-4">
-                            {topmovies.map((topmovie) => (
-                                <Col key={topmovie.SERIES_ID}>
-                                    <Card className="h-100 shadow-sm" bg="dark" text="light">
-                                        <Card.Body>
-                                            <Card.Title className="text-xl font-bold mb-2">{topmovie.TITLE}</Card.Title>
-                                            <Card.Img variant="top" src={topmovie.URL}  style={{ width: '200px', height: '300px', objectFit: 'cover' }}/>
-                                        </Card.Body>
-                                        <Card.Body>
-                                            <Card.Link as={Link} to={'movies/'+ topmovie.SERIES_ID + '/' + topmovie.TITLE}> <Button variant="success" className="fw-bold text-light">Szczegółowe informacje</Button> </Card.Link>
+                {isLoading ? (
+                    <div className="loading-container">
+                        <div className="spinner"></div>
+                        <p>Ładowanie najlepszych pozycji...</p>
+                    </div>
+                ) : (
+                    <Row xs={1} md={2} lg={3} className="g-4">
+                        {topMovies.map((topMovie) => (
+                            <Col key={topMovie.SERIES_ID || topMovie.MOVIE_ID}>
+                                <div className="featured-poster-card">
+                                    <Card className="h-100 shadow-lg featured-card">
+                                        <Card.Body className="d-flex flex-column">
+                                            <Card.Title className="featured-title mb-3">{topMovie.TITLE}</Card.Title>
+                                            <div className="featured-image-container">
+                                                <Card.Img variant="top" src={topMovie.URL} className="featured-image" />
+                                                <div className="featured-badge">
+                                                    <span>TOP</span>
+                                                </div>
+                                            </div>
+                                            <div className="mt-auto pt-3 text-center">
+                                                <Link to={createPath(topMovie)}>
+                                                    <Button variant="primary" className="featured-details-btn">
+                                                        Szczegółowe informacje
+                                                    </Button>
+                                                </Link>
+                                            </div>
                                         </Card.Body>
                                     </Card>
-                                </Col>
-                            ))}
-                        </Row>
-        </Container>
+                                </div>
+                            </Col>
+                        ))}
+                    </Row>
+                )}
+            </Container>
+        </div>
     );
 };
 

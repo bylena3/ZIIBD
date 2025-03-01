@@ -43,7 +43,11 @@ export const MainContent = () => {
             if (!response.ok) throw new Error("Network response failed");
 
             const data = await response.json();
-            setMovies(data);
+            const dataWithIndex = data.map((item, index) => ({
+                ...item,
+                uniqueIndex: index
+            }));
+            setMovies(dataWithIndex);
         } catch (error) {
             console.error('Error fetching top media:', error);
         } finally {
@@ -56,12 +60,12 @@ export const MainContent = () => {
     }, []);
 
     function createPath(topMovie) {
-        if (topMovie.SERIES_ID == null) {
-            return `movies/${topMovie.MOVIE_ID}/${topMovie.TITLE}`;
+        if (topMovie.MOVIE_ID != null) {
+            return `movies/${topMovie.MOVIE_ID}/${encodeURIComponent(topMovie.TITLE)}`;
+        } else if (topMovie.SERIES_ID != null) {
+            return `series/${topMovie.SERIES_ID}/${encodeURIComponent(topMovie.TITLE)}`;
         }
-        if (topMovie.MOVIE_ID == null) {
-            return `series/${topMovie.SERIES_ID}/${topMovie.TITLE}`;
-        }
+        return "/";
     }
 
     return (
@@ -81,11 +85,13 @@ export const MainContent = () => {
                 ) : (
                     <Row xs={1} md={2} lg={3} className="g-4">
                         {topMovies.map((topMovie) => (
-                            <Col key={topMovie.SERIES_ID || topMovie.MOVIE_ID}>
+                            <Col key={`media_${topMovie.uniqueIndex}`}>
                                 <div className="featured-poster-card">
                                     <Card className="h-100 shadow-lg featured-card">
                                         <Card.Body className="d-flex flex-column">
-                                            <Card.Title className="featured-title mb-3">{topMovie.TITLE}</Card.Title>
+                                            <Card.Title className="featured-title mb-3">
+                                                {topMovie.TITLE}
+                                                </Card.Title>
                                             <div className="featured-image-container">
                                                 <Card.Img variant="top" src={topMovie.URL} className="featured-image" />
                                                 <div className="featured-badge">

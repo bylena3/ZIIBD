@@ -166,10 +166,10 @@
     font-size: 2rem;
     font-weight: 700;
     color: #ffffff;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
     border-bottom: 2px solid #f5af19;
-    padding-bottom: 0.5rem;
+    padding-bottom: 1rem;
 }
 
 .add-review-card {
@@ -286,10 +286,6 @@
     padding: 1.5rem;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     transition: transform 0.2s ease;
-}
-
-.review-card:hover {
-    transform: translateY(-2px);
 }
 
 .review-header {
@@ -582,6 +578,35 @@
 
 .golden-line {
     height: 3px;
-    //background: linear-gradient;
+    background: linear-gradient;
     color: gold;
+}
+
+.navbar{
+    background-color:rgba(20, 20, 20, 0.9) !important;
+    height: 75px;
+}
+.navbar-link{
+    color:white;
+    border-radius: 5px;
+    font-size: large;
+    margin: 0px 10px;
+}
+.navbar-link:hover{
+    color:#f5af19;
+    background-color: #252525;
+    border-radius: 5px;
+}
+.navbar-link:focus,
+.navbar-link:active{
+    color:#f5af19;
+}
+.navbar-title{
+    color:#f5af19;
+    font-size: xx-large;
+    font-weight:700;
+}
+.navbar-title:hover,
+.navbar-title:focus{
+    color:#f5af19;
 }

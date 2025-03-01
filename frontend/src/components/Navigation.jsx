@@ -6,12 +6,13 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { Link } from 'react-router-dom';
+import "./MovieStyles.css";
 
 const Navigation = () => {
   return (
-      <Navbar expand="lg" bg="dark" data-bs-theme="dark">
+      <Navbar className="navbar"expand="lg" bg="dark" data-bs-theme="dark">
         <Container fluid>
-          <Navbar.Brand as={Link} to="/">KrytykUŚ</Navbar.Brand>
+          <Navbar.Brand as={Link} to="/" className="navbar-title">KrytykUŚ</Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
             <Nav
@@ -19,8 +20,8 @@ const Navigation = () => {
                 style={{ maxHeight: '100px' }}
                 navbarScroll
             >
-              <Nav.Link as={Link} to="/movies">Filmy</Nav.Link>
-              <Nav.Link as={Link} to="/series">Seriale</Nav.Link>
+              <Nav.Link as={Link} to="/movies" className="navbar-link">Filmy</Nav.Link>
+              <Nav.Link as={Link} to="/series" className="navbar-link">Seriale</Nav.Link>
             </Nav>
             {/*<Form className="d-flex">*/}
             {/*  <Form.Control*/}

@@ -167,7 +167,7 @@ export const SeriesContent = () => {
                                     <h1 className="movie-title">{seriesInfo.TITLE}</h1>
                                     <div className="movie-metadata">
                                         <span className="movie-genre">{seriesInfo.GENRE}</span>
-                                        <span className="movie-duration">{seriesInfo.AVGDURATION} min/odcinek</span>
+                                        <span className="movie-duration"> ~{seriesInfo.AVGDURATION} min/odc.</span>
                                         <span className="series-info">{seriesInfo.SEASONS} sezonów</span>
                                     </div>
                                     <div className="movie-director">
@@ -227,7 +227,6 @@ export const SeriesContent = () => {
                             </div>
 
                             <div className="form-group review-content-group">
-                                <Form.Label>Twoja recenzja:</Form.Label>
                                 <Form.Control
                                     as="textarea"
                                     rows={5}

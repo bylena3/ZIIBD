@@ -222,7 +222,6 @@ export const MovieContent = () => {
                             </div>
 
                             <div className="form-group review-content-group">
-                                <Form.Label>Twoja recenzja:</Form.Label>
                                 <Form.Control
                                     as="textarea"
                                     rows={5}

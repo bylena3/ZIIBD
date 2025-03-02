@@ -589,12 +589,13 @@
 .navbar-link{
     color:white;
     border-radius: 5px;
-    font-size: large;
-    margin: 0px 10px;
+    font-size: x-large;
+    font-weight: 600;
+    margin: 0px 15px;
 }
 .navbar-link:hover{
     color:#f5af19;
-    background-color: #252525;
+    background-color:#181818;
     border-radius: 5px;
 }
 .navbar-link:focus,
@@ -605,8 +606,18 @@
     color:#f5af19;
     font-size: xx-large;
     font-weight:700;
+    margin-left: 40px;
 }
 .navbar-title:hover,
 .navbar-title:focus{
     color:#f5af19;
 }
+
+.navbar-content{
+    margin-left: auto;
+    margin-right: 40px;
+}
+
+
+
+

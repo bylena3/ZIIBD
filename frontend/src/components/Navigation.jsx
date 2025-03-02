@@ -12,11 +12,11 @@ const Navigation = () => {
   return (
       <Navbar className="navbar"expand="lg" bg="dark" data-bs-theme="dark">
         <Container fluid>
-          <Navbar.Brand as={Link} to="/" className="navbar-title">KrytykUŚ</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/" className="navbar-title">KrytykUŚ</Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
             <Nav
-                className="me-auto my-2 my-lg-0"
+                className="navbar-content my-2 my-lg-0"
                 style={{ maxHeight: '100px' }}
                 navbarScroll
             >
